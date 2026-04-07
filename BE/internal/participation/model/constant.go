@@ -27,3 +27,11 @@ func (s *ParticipationStatus) Scan(value interface{}) error {
 	*s = ParticipationStatus(string(bytes))
 	return nil
 }
+
+func (s ParticipationStatus) IsValid() bool {
+	switch s {
+	case Draft, Absent, Review, Approved, Denied:
+		return true
+	}
+	return false
+}

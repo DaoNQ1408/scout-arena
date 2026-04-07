@@ -27,3 +27,11 @@ func (s *ArenaStatus) Scan(value interface{}) error {
 	*s = ArenaStatus(string(bytes))
 	return nil
 }
+
+func (s ArenaStatus) IsValid() bool {
+	switch s {
+	case ArenaDraft, ArenaIncoming, ArenaActive, ArenaFinished, ArenaDeleted:
+		return true
+	}
+	return false
+}

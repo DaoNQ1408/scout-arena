@@ -43,3 +43,19 @@ func (s *TeamStatus) Scan(value interface{}) error {
 	*s = TeamStatus(string(bytes))
 	return nil
 }
+
+func (s UserStatus) IsValid() bool {
+	switch s {
+	case UserActive, UserMoved:
+		return true
+	}
+	return false
+}
+
+func (s TeamStatus) IsValid() bool {
+	switch s {
+	case TeamActive, TeamInactive:
+		return true
+	}
+	return false
+}

@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"scout-arena/internal/validator"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	fmt.Println("App initializing...")
+	r := gin.Default()
+	validator.Init()
+	r.Run(":8080")
 }
