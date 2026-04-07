@@ -1,10 +1,7 @@
-function App() {
+import DesignSystemPage from './pages/DesignSystemPage'
 
-  return (
-    <>
-      <div>THIS IS SCOUT 1</div>
-    </>
-  )
+function App() {
+  return <DesignSystemPage />
 }
 
 export default App
