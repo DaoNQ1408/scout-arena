@@ -20,7 +20,7 @@ CREATE TABLE rounds (
 CREATE TABLE challenges (
                             id SERIAL PRIMARY KEY,
                             round_id INTEGER REFERENCES rounds(id),
-                            rank_level user_rank NOT NULL,
+                            rank_level user_rank,
                             title VARCHAR(255) NOT NULL,
                             weight_percentage DECIMAL(5, 2) NOT NULL -- % điểm của challenge này trong Round
 );
