@@ -38,9 +38,9 @@ func main() {
 		&userModel.Role{},
 		&userModel.User{},
 
-		&arenaModel.Challenge{},
-		&arenaModel.Round{},
 		&arenaModel.Season{},
+		&arenaModel.Round{},
+		&arenaModel.Challenge{},
 
 		&participantionModel.UserChallengeRecord{},
 		&participantionModel.UserRoundProgress{},
