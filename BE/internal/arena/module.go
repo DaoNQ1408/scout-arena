@@ -9,15 +9,14 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitModule(router *gin.RouterGroup, db *gorm.DB) {
-	repo := repository.NewSeasonRepository(db)
-	svc := service.NewSeasonService(repo)
-	hdl := handler.NewSeasonHandler(svc)
+func InitModule(router *gin.RouterGroup, database *gorm.DB) {
+	repository := repository.NewSeasonRepository(database)
+	service := service.NewSeasonService(repository)
+	handler := handler.NewSeasonHandler(service)
 
-	// 2. Khai báo routes cho module này
 	seasons := router.Group("/seasons")
 	{
-		seasons.POST("", hdl.Create)
+		seasons.POST("", handler.Create)
 		// seasons.GET("/:id", hdl.GetByID)
 	}
 }
