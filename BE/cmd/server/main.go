@@ -3,10 +3,8 @@ package main
 import (
 	"log"
 	"os"
-	arenaModel "scout-arena/internal/arena/model"
+	"scout-arena/internal/arena"
 	"scout-arena/internal/db"
-	participantionModel "scout-arena/internal/participation/model"
-	userModel "scout-arena/internal/user/model"
 	"scout-arena/internal/validator"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +16,7 @@ func main() {
 	if err != nil {
 		log.Printf("Lỗi khi tải file .env: %v", err)
 	}
+
 	dbCfg := db.Config{
 		Driver: os.Getenv("DB_DRIVER"),
 		DSN:    os.Getenv("DB_DSN"),
@@ -32,33 +31,21 @@ func main() {
 
 	conn := database.GetDB()
 
-	err = conn.AutoMigrate(
-		&userModel.Rank{},
-		&userModel.Team{},
-		&userModel.Role{},
-		&userModel.User{},
-
-		&arenaModel.Season{},
-		&arenaModel.Round{},
-		&arenaModel.Challenge{},
-
-		&participantionModel.UserChallengeRecord{},
-		&participantionModel.UserRoundProgress{},
-		&participantionModel.UserSeasonStat{},
-	)
-
-	if err != nil {
-		log.Printf("Lỗi khi migrate database: %v", err)
-	} else {
-		log.Println("Database migrated successfully")
+	if err := db.MigrateDB(conn); err != nil {
+		log.Fatalf("Lỗi khi migrate database: %v", err)
 	}
+	log.Println("Database migrated successfully")
 
 	r := gin.Default()
 	r.SetTrustedProxies(nil)
 	validator.Init()
+
+	apiV1 := r.Group("/api/v1")
+
+	arena.InitModule(apiV1, conn)
+	// user.InitModule(apiV1, conn)
+
 	port := os.Getenv("APP_PORT")
-	if port == "" {
-		port = ":8080" // port mặc định
-	}
+
 	r.Run(port)
 }
