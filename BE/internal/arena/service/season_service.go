@@ -33,7 +33,7 @@ func (s *seasonService) Create(ctx context.Context, request *model.SeasonRequest
 }
 
 func (s *seasonService) Update(ctx context.Context, request *model.SeasonRequest, id uint) (*model.SeasonResponse, error) {
-	var season, err = s.FindByID(ctx, id)
+	var season, err = s.repo.GetById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -56,12 +56,8 @@ func (s *seasonService) Delete(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (s *seasonService) FindByID(ctx context.Context, id uint) (*model.Season, error) {
-	return s.repo.GetById(ctx, id)
-}
-
 func (s *seasonService) GetById(ctx context.Context, id uint) (*model.SeasonResponse, error) {
-	var season, err = s.FindByID(ctx, id)
+	season, err := s.repo.GetById(ctx, id)
 	if err != nil {
 		return nil, err
 	}

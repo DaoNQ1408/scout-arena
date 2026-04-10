@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 	"scout-arena/internal/arena/model"
-	"strconv"
+	"scout-arena/internal/pkg"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,56 +25,51 @@ func NewSeasonHandler(service SeasonService) *seasonHandler {
 }
 
 func (s *seasonHandler) Create(c *gin.Context) {
-	var req model.SeasonRequest
+	var request model.SeasonRequest
 
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	res, err := s.service.Create(c.Request.Context(), &req)
+	response, err := s.service.Create(c.Request.Context(), &request)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, res)
+	c.JSON(http.StatusCreated, response)
 }
 
 func (s *seasonHandler) Update(c *gin.Context) {
-
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 32)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+	id, validParam := pkg.GetIDParam(c, "id")
+	if !validParam {
 		return
 	}
 
-	var req model.SeasonRequest
+	var request model.SeasonRequest
 
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	res, err := s.service.Update(c.Request.Context(), &req, uint(id))
+	response, err := s.service.Update(c.Request.Context(), &request, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, response)
 }
 
 func (s *seasonHandler) Delete(c *gin.Context) {
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 32)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+	id, validParam := pkg.GetIDParam(c, "id")
+	if !validParam {
 		return
 	}
 
-	err = s.service.Delete(c.Request.Context(), uint(id))
+	err := s.service.Delete(c.Request.Context(), id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -84,18 +79,16 @@ func (s *seasonHandler) Delete(c *gin.Context) {
 }
 
 func (s *seasonHandler) GetById(c *gin.Context) {
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 32)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+	id, validParam := pkg.GetIDParam(c, "id")
+	if !validParam {
 		return
 	}
 
-	res, err := s.service.GetById(c.Request.Context(), uint(id))
+	response, err := s.service.GetById(c.Request.Context(), id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, response)
 }

@@ -10,15 +10,28 @@ import (
 )
 
 func InitModule(router *gin.RouterGroup, database *gorm.DB) {
-	repository := repository.NewSeasonRepository(database)
-	service := service.NewSeasonService(repository)
-	handler := handler.NewSeasonHandler(service)
+	seasonRepository := repository.NewSeasonRepository(database)
+	seasonService := service.NewSeasonService(seasonRepository)
+	seasonHandler := handler.NewSeasonHandler(seasonService)
+
+	roundRepository := repository.NewRoundRepository(database)
+	roundService := service.NewRoundService(roundRepository)
+	roundHandler := handler.NewRoundHandler(roundService)
 
 	seasons := router.Group("/seasons")
 	{
-		seasons.POST("", handler.Create)
-		seasons.PUT("/:id", handler.Update)
-		seasons.DELETE("/:id", handler.Delete)
-		seasons.GET("/:id", handler.GetById)
+		seasons.POST("", seasonHandler.Create)
+		seasons.PUT("/:id", seasonHandler.Update)
+		seasons.DELETE("/:id", seasonHandler.Delete)
+		seasons.GET("/:id", seasonHandler.GetById)
+		seasons.GET("/:id/rounds", roundHandler.GetBySeasonId)
+	}
+
+	rounds := router.Group("/rounds")
+	{
+		rounds.POST("", roundHandler.Create)
+		rounds.PUT("/:id", roundHandler.Update)
+		rounds.DELETE("/:id", roundHandler.Delete)
+		rounds.GET("/:id", roundHandler.GetById)
 	}
 }
