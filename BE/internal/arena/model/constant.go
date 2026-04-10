@@ -2,7 +2,7 @@ package model
 
 import (
 	"database/sql/driver"
-	"errors"
+	"fmt"
 )
 
 type ArenaStatus string
@@ -12,25 +12,41 @@ const (
 	ArenaIncoming ArenaStatus = "INCOMING"
 	ArenaActive   ArenaStatus = "ACTIVE"
 	ArenaFinished ArenaStatus = "FINISHED"
-	ArenaDeleted  ArenaStatus = "DELETED"
 )
 
-func (s ArenaStatus) Value() (driver.Value, error) {
-	return string(s), nil
-}
-
-func (s *ArenaStatus) Scan(value interface{}) error {
-	bytes, ok := value.([]byte)
-	if !ok {
-		return errors.New("kiểu dữ liệu từ DB không hợp lệ cho ArenaStatus")
+func (as *ArenaStatus) Scan(value interface{}) error {
+	if value == nil {
+		*as = ""
+		return nil
 	}
-	*s = ArenaStatus(string(bytes))
+
+	var str string
+	switch v := value.(type) {
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	default:
+		return fmt.Errorf("kiểu dữ liệu %T không hợp lệ cho ArenaStatus", value)
+	}
+
+	*as = ArenaStatus(str)
 	return nil
 }
 
-func (s ArenaStatus) IsValid() bool {
-	switch s {
-	case ArenaDraft, ArenaIncoming, ArenaActive, ArenaFinished, ArenaDeleted:
+func (as *ArenaStatus) Value() (driver.Value, error) {
+	if as == nil {
+		return nil, nil
+	}
+	return string(*as), nil
+}
+
+func (as *ArenaStatus) IsValid() bool {
+	if as == nil {
+		return false
+	}
+	switch *as {
+	case ArenaDraft, ArenaIncoming, ArenaActive, ArenaFinished:
 		return true
 	}
 	return false

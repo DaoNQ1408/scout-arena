@@ -25,10 +25,46 @@ func (s *seasonService) Create(ctx context.Context, request *model.SeasonRequest
 	var newSeason = request.ToEntity()
 
 	createdSeason, err := s.repo.Create(ctx, newSeason)
-
 	if err != nil {
 		return nil, err
 	}
 
 	return createdSeason.ToResponse(), nil
+}
+
+func (s *seasonService) Update(ctx context.Context, request *model.SeasonRequest, id uint) (*model.SeasonResponse, error) {
+	var season, err = s.FindByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	season.UpdateFromRequest(request)
+
+	updatedSeason, err := s.repo.Update(ctx, season)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedSeason.ToResponse(), err
+}
+
+func (s *seasonService) Delete(ctx context.Context, id uint) error {
+	if err := s.repo.Delete(ctx, id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *seasonService) FindByID(ctx context.Context, id uint) (*model.Season, error) {
+	return s.repo.GetById(ctx, id)
+}
+
+func (s *seasonService) GetById(ctx context.Context, id uint) (*model.SeasonResponse, error) {
+	var season, err = s.FindByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return season.ToResponse(), nil
 }

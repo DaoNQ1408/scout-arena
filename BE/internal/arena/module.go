@@ -17,6 +17,8 @@ func InitModule(router *gin.RouterGroup, database *gorm.DB) {
 	seasons := router.Group("/seasons")
 	{
 		seasons.POST("", handler.Create)
-		// seasons.GET("/:id", hdl.GetByID)
+		seasons.PUT("/:id", handler.Update)
+		seasons.DELETE("/:id", handler.Delete)
+		seasons.GET("/:id", handler.GetById)
 	}
 }

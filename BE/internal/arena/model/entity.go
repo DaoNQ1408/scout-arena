@@ -26,6 +26,14 @@ func (request *SeasonRequest) ToEntity() *Season {
 	}
 }
 
+func (season *Season) UpdateFromRequest(request *SeasonRequest) {
+	season.Name = request.Name
+	season.ImageUrl = request.ImageUrl
+	season.StartedAt = request.StartedAt
+	season.EndedAt = request.EndedAt
+	season.Status = request.Status
+}
+
 type Season struct {
 	gorm.Model
 	Name      string      `json:"name" gorm:"size:50;not null"`

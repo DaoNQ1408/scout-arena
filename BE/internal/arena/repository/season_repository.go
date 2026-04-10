@@ -17,17 +17,15 @@ func NewSeasonRepository(db *gorm.DB) *seasonRepository {
 
 func (s *seasonRepository) Create(ctx context.Context, season *model.Season) (*model.Season, error) {
 	err := s.db.WithContext(ctx).Create(season).Error
-
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return season, nil
 }
 
 func (s *seasonRepository) Update(ctx context.Context, season *model.Season) (*model.Season, error) {
 	err := s.db.WithContext(ctx).Save(season).Error
-
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +35,6 @@ func (s *seasonRepository) Update(ctx context.Context, season *model.Season) (*m
 
 func (s *seasonRepository) Delete(ctx context.Context, id uint) error {
 	err := s.db.WithContext(ctx).Delete(&model.Season{}, id).Error
-
 	if err != nil {
 		return err
 	}
