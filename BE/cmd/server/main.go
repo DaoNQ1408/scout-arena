@@ -3,14 +3,24 @@ package main
 import (
 	"log"
 	"os"
+	_ "scout-arena/docs"
 	"scout-arena/internal/arena"
 	"scout-arena/internal/database"
 	"scout-arena/internal/validator"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title Scout Arena API
+// @version 1.0
+// @description API for managing seasons, rounds, and challenges in the Scout Arena application.
+// @contact.name API Support
+// @contact.url http://www.scoutarena.com/support
+// @contact.email
+// @BasePath /api/v1
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -40,6 +50,7 @@ func main() {
 	r.SetTrustedProxies(nil)
 	validator.Init()
 
+	r.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	apiV1 := r.Group("/api/v1")
 
 	arena.InitModule(apiV1, connection)

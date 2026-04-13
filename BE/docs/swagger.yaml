@@ -1,0 +1,458 @@
+basePath: /api/v1
+definitions:
+  model.ArenaStatus:
+    enum:
+    - DRAFT
+    - INCOMING
+    - ACTIVE
+    - FINISHED
+    type: string
+    x-enum-varnames:
+    - ArenaDraft
+    - ArenaIncoming
+    - ArenaActive
+    - ArenaFinished
+  model.ChallengeRequest:
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      point:
+        type: integer
+      round_id:
+        type: integer
+      status:
+        $ref: '#/definitions/model.ArenaStatus'
+    required:
+    - image_url
+    - name
+    - point
+    - round_id
+    - status
+    type: object
+  model.ChallengeResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      name:
+        type: string
+      point:
+        type: integer
+      round_id:
+        type: integer
+      round_name:
+        type: string
+      season_id:
+        type: integer
+      season_name:
+        type: string
+    type: object
+  model.RoundRequest:
+    properties:
+      image_url:
+        type: string
+      name:
+        type: string
+      occurred_at:
+        type: string
+      season_id:
+        type: integer
+      status:
+        $ref: '#/definitions/model.ArenaStatus'
+      total_point:
+        type: integer
+    required:
+    - image_url
+    - name
+    - occurred_at
+    - season_id
+    - status
+    - total_point
+    type: object
+  model.RoundResponse:
+    properties:
+      id:
+        type: integer
+      image_url:
+        type: string
+      name:
+        type: string
+      occurred_at:
+        type: string
+      season_id:
+        type: integer
+      season_name:
+        type: string
+      total_point:
+        type: integer
+    type: object
+  model.SeasonRequest:
+    properties:
+      ended_at:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      started_at:
+        type: string
+      status:
+        $ref: '#/definitions/model.ArenaStatus'
+    required:
+    - ended_at
+    - image_url
+    - name
+    - started_at
+    - status
+    type: object
+  model.SeasonResponse:
+    properties:
+      ended_at:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      name:
+        type: string
+      started_at:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: http://www.scoutarena.com/support
+  description: API for managing seasons, rounds, and challenges in the Scout Arena
+    application.
+  title: Scout Arena API
+  version: "1.0"
+paths:
+  /challenges/{id}:
+    delete:
+      description: Xóa (soft delete) dựa trên ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Challenge deleted successfully'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Xóa thử thách
+      tags:
+      - challenges
+    get:
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ChallengeResponse'
+        "404":
+          description: Không tìm thấy
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Lấy chi tiết thử thách theo vòng đấu
+      tags:
+      - challenges
+    put:
+      consumes:
+      - application/json
+      description: Cập nhật thông tin chi tiết của một thử thách dựa trên ID
+      parameters:
+      - description: Round ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dữ liệu cập nhật
+        in: body
+        name: challenge
+        required: true
+        schema:
+          $ref: '#/definitions/model.ChallengeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ChallengeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Cập nhật thử thách
+      tags:
+      - challenges
+  /rounds:
+    post:
+      consumes:
+      - application/json
+      description: Tạo vòng đấu mới với tên, hình ảnh và thời gian bắt đầu/kết thúc
+      parameters:
+      - description: Thông tin vòng đấu
+        in: body
+        name: season
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoundRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.RoundResponse'
+        "400":
+          description: Lỗi validation
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Tạo mới một vòng đấu
+      tags:
+      - rounds
+  /rounds/{id}:
+    delete:
+      description: Xóa (soft delete) dựa trên ID
+      parameters:
+      - description: Round ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Round deleted successfully'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Xóa vòng đấu
+      tags:
+      - rounds
+    get:
+      parameters:
+      - description: Round ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.RoundResponse'
+        "404":
+          description: Không tìm thấy
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Lấy chi tiết vòng đấu theo mùa giải
+      tags:
+      - rounds
+    put:
+      consumes:
+      - application/json
+      description: Cập nhật thông tin chi tiết của một vòng đấu dựa trên ID
+      parameters:
+      - description: Round ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dữ liệu cập nhật
+        in: body
+        name: season
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoundRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.RoundResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Cập nhật vòng đấu
+      tags:
+      - rounds
+  /seasons:
+    post:
+      consumes:
+      - application/json
+      description: Tạo mùa giải mới với tên, hình ảnh và thời gian bắt đầu/kết thúc
+      parameters:
+      - description: Thông tin mùa giải
+        in: body
+        name: season
+        required: true
+        schema:
+          $ref: '#/definitions/model.SeasonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.SeasonResponse'
+        "400":
+          description: Lỗi validation
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Tạo mới một mùa giải
+      tags:
+      - seasons
+  /seasons/{id}:
+    delete:
+      description: Xóa (soft delete) một mùa giải dựa trên ID
+      parameters:
+      - description: Season ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Season deleted successfully'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Xóa mùa giải
+      tags:
+      - seasons
+    get:
+      description: Lấy thông tin chi tiết của một mùa giải dựa trên ID
+      parameters:
+      - description: Season ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SeasonResponse'
+        "404":
+          description: Không tìm thấy
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Lấy chi tiết mùa giải
+      tags:
+      - seasons
+    put:
+      consumes:
+      - application/json
+      description: Cập nhật thông tin chi tiết của một mùa giải dựa trên ID
+      parameters:
+      - description: Season ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dữ liệu cập nhật
+        in: body
+        name: season
+        required: true
+        schema:
+          $ref: '#/definitions/model.SeasonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SeasonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Cập nhật mùa giải
+      tags:
+      - seasons
+swagger: "2.0"

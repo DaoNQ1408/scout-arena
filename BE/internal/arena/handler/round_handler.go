@@ -25,6 +25,16 @@ func NewRoundHandler(service RoundService) *roundHandler {
 	return &roundHandler{service: service}
 }
 
+// Create GoDoc
+// @Summary      Tạo mới một vòng đấu
+// @Description  Tạo vòng đấu mới với tên, hình ảnh và thời gian bắt đầu/kết thúc
+// @Tags         rounds
+// @Accept       json
+// @Produce      json
+// @Param        season  body      model.RoundRequest  true  "Thông tin vòng đấu"
+// @Success      201     {object}  model.RoundResponse
+// @Failure      400     {object}  map[string]string "Lỗi validation"
+// @Router       /rounds [post]
 func (handler *roundHandler) Create(c *gin.Context) {
 	var request model.RoundRequest
 
@@ -42,6 +52,18 @@ func (handler *roundHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, response)
 }
 
+// Update godoc
+// @Summary      Cập nhật vòng đấu
+// @Description  Cập nhật thông tin chi tiết của một vòng đấu dựa trên ID
+// @Tags         rounds
+// @Accept       json
+// @Produce      json
+// @Param        id      path      int                  true  "Round ID"
+// @Param        season  body      model.RoundRequest  true  "Dữ liệu cập nhật"
+// @Success      200     {object}  model.RoundResponse
+// @Failure      400     {object}  map[string]string
+// @Failure      404     {object}  map[string]string
+// @Router       /rounds/{id} [put]
 func (handler *roundHandler) Update(c *gin.Context) {
 	id, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
@@ -63,6 +85,15 @@ func (handler *roundHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// Delete godoc
+// @Summary      Xóa vòng đấu
+// @Description  Xóa (soft delete) dựa trên ID
+// @Tags         rounds
+// @Produce      json
+// @Param        id   path      int  true  "Round ID"
+// @Success      200  {object}  map[string]string "message: Round deleted successfully"
+// @Failure      404  {object}  map[string]string
+// @Router       /rounds/{id} [delete]
 func (handler *roundHandler) Delete(c *gin.Context) {
 	id, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
@@ -77,6 +108,14 @@ func (handler *roundHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Round deleted successfully"})
 }
 
+// GetById godoc
+// @Summary      Lấy chi tiết vòng đấu
+// @Tags         rounds
+// @Produce      json
+// @Param        id   path      int  true  "Round ID"
+// @Success      200  {object}  model.RoundResponse
+// @Failure      404  {object}  map[string]string "Không tìm thấy"
+// @Router       /rounds/{id} [get]
 func (handler *roundHandler) GetById(c *gin.Context) {
 	id, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
@@ -92,6 +131,14 @@ func (handler *roundHandler) GetById(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// GetBySeasonId godoc
+// @Summary      Lấy chi tiết vòng đấu theo mùa giải
+// @Tags         rounds
+// @Produce      json
+// @Param        id   path      int  true  "Round ID"
+// @Success      200  {object}  model.RoundResponse
+// @Failure      404  {object}  map[string]string "Không tìm thấy"
+// @Router       /rounds/{id} [get]
 func (handler *roundHandler) GetBySeasonId(c *gin.Context) {
 	seasonId, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
