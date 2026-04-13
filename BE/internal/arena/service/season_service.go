@@ -21,10 +21,10 @@ func NewSeasonService(repo SeasonRepository) *seasonService {
 	return &seasonService{repo: repo}
 }
 
-func (s *seasonService) Create(ctx context.Context, request *model.SeasonRequest) (*model.SeasonResponse, error) {
+func (service *seasonService) Create(ctx context.Context, request *model.SeasonRequest) (*model.SeasonResponse, error) {
 	var newSeason = request.ToEntity()
 
-	createdSeason, err := s.repo.Create(ctx, newSeason)
+	createdSeason, err := service.repo.Create(ctx, newSeason)
 	if err != nil {
 		return nil, err
 	}
@@ -32,15 +32,15 @@ func (s *seasonService) Create(ctx context.Context, request *model.SeasonRequest
 	return createdSeason.ToResponse(), nil
 }
 
-func (s *seasonService) Update(ctx context.Context, request *model.SeasonRequest, id uint) (*model.SeasonResponse, error) {
-	var season, err = s.repo.GetById(ctx, id)
+func (service *seasonService) Update(ctx context.Context, request *model.SeasonRequest, id uint) (*model.SeasonResponse, error) {
+	var season, err = service.repo.GetById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
 	season.UpdateFromRequest(request)
 
-	updatedSeason, err := s.repo.Update(ctx, season)
+	updatedSeason, err := service.repo.Update(ctx, season)
 	if err != nil {
 		return nil, err
 	}
@@ -48,16 +48,16 @@ func (s *seasonService) Update(ctx context.Context, request *model.SeasonRequest
 	return updatedSeason.ToResponse(), err
 }
 
-func (s *seasonService) Delete(ctx context.Context, id uint) error {
-	if err := s.repo.Delete(ctx, id); err != nil {
+func (service *seasonService) Delete(ctx context.Context, id uint) error {
+	if err := service.repo.Delete(ctx, id); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (s *seasonService) GetById(ctx context.Context, id uint) (*model.SeasonResponse, error) {
-	season, err := s.repo.GetById(ctx, id)
+func (service *seasonService) GetById(ctx context.Context, id uint) (*model.SeasonResponse, error) {
+	season, err := service.repo.GetById(ctx, id)
 	if err != nil {
 		return nil, err
 	}

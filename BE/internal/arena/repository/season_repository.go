@@ -15,8 +15,8 @@ func NewSeasonRepository(db *gorm.DB) *seasonRepository {
 	return &seasonRepository{db: db}
 }
 
-func (s *seasonRepository) Create(ctx context.Context, season *model.Season) (*model.Season, error) {
-	err := s.db.WithContext(ctx).Create(season).Error
+func (repository *seasonRepository) Create(ctx context.Context, season *model.Season) (*model.Season, error) {
+	err := repository.db.WithContext(ctx).Create(season).Error
 	if err != nil {
 		return nil, err
 	}
@@ -24,8 +24,8 @@ func (s *seasonRepository) Create(ctx context.Context, season *model.Season) (*m
 	return season, nil
 }
 
-func (s *seasonRepository) Update(ctx context.Context, season *model.Season) (*model.Season, error) {
-	err := s.db.WithContext(ctx).Save(season).Error
+func (repository *seasonRepository) Update(ctx context.Context, season *model.Season) (*model.Season, error) {
+	err := repository.db.WithContext(ctx).Save(season).Error
 	if err != nil {
 		return nil, err
 	}
@@ -33,8 +33,8 @@ func (s *seasonRepository) Update(ctx context.Context, season *model.Season) (*m
 	return season, nil
 }
 
-func (s *seasonRepository) Delete(ctx context.Context, id uint) error {
-	err := s.db.WithContext(ctx).Delete(&model.Season{}, id).Error
+func (repository *seasonRepository) Delete(ctx context.Context, id uint) error {
+	err := repository.db.WithContext(ctx).Delete(&model.Season{}, id).Error
 	if err != nil {
 		return err
 	}
@@ -42,10 +42,10 @@ func (s *seasonRepository) Delete(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (s *seasonRepository) GetById(ctx context.Context, id uint) (*model.Season, error) {
+func (repository *seasonRepository) GetById(ctx context.Context, id uint) (*model.Season, error) {
 	var season model.Season
 
-	if err := s.db.WithContext(ctx).First(&season, id).Error; err != nil {
+	if err := repository.db.WithContext(ctx).First(&season, id).Error; err != nil {
 		return nil, err
 	}
 

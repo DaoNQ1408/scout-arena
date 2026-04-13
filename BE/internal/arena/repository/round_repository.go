@@ -15,8 +15,8 @@ func NewRoundRepository(db *gorm.DB) *roundRepository {
 	return &roundRepository{db: db}
 }
 
-func (r *roundRepository) Create(ctx context.Context, round *model.Round) (*model.Round, error) {
-	err := r.db.WithContext(ctx).Create(round).Error
+func (repository *roundRepository) Create(ctx context.Context, round *model.Round) (*model.Round, error) {
+	err := repository.db.WithContext(ctx).Create(round).Error
 	if err != nil {
 		return nil, err
 	}
@@ -24,8 +24,8 @@ func (r *roundRepository) Create(ctx context.Context, round *model.Round) (*mode
 	return round, nil
 }
 
-func (r *roundRepository) Update(ctx context.Context, round *model.Round) (*model.Round, error) {
-	err := r.db.WithContext(ctx).Save(round).Error
+func (repository *roundRepository) Update(ctx context.Context, round *model.Round) (*model.Round, error) {
+	err := repository.db.WithContext(ctx).Save(round).Error
 	if err != nil {
 		return nil, err
 	}
@@ -33,8 +33,8 @@ func (r *roundRepository) Update(ctx context.Context, round *model.Round) (*mode
 	return round, nil
 }
 
-func (r *roundRepository) Delete(ctx context.Context, id uint) error {
-	err := r.db.WithContext(ctx).Delete(&model.Round{}, id).Error
+func (repository *roundRepository) Delete(ctx context.Context, id uint) error {
+	err := repository.db.WithContext(ctx).Delete(&model.Round{}, id).Error
 	if err != nil {
 		return err
 	}
@@ -42,20 +42,20 @@ func (r *roundRepository) Delete(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (r *roundRepository) GetById(ctx context.Context, id uint) (*model.Round, error) {
+func (repository *roundRepository) GetById(ctx context.Context, id uint) (*model.Round, error) {
 	var round model.Round
 
-	if err := r.db.WithContext(ctx).First(&round, id).Error; err != nil {
+	if err := repository.db.WithContext(ctx).First(&round, id).Error; err != nil {
 		return nil, err
 	}
 
 	return &round, nil
 }
 
-func (r *roundRepository) GetBySeasonID(ctx context.Context, seasonID uint) ([]*model.Round, error) {
+func (repository *roundRepository) GetBySeasonID(ctx context.Context, seasonID uint) ([]*model.Round, error) {
 	var rounds []*model.Round
 
-	err := r.db.WithContext(ctx).Where("season_id = ?", seasonID).Find(&rounds).Error
+	err := repository.db.WithContext(ctx).Where("season_id = ?", seasonID).Find(&rounds).Error
 	if err != nil {
 		return nil, err
 	}

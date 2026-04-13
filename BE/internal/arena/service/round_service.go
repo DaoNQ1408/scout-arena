@@ -13,17 +13,17 @@ type RoundRepository interface {
 	GetBySeasonID(ctx context.Context, seasonID uint) ([]*model.Round, error)
 }
 type roundService struct {
-	repo RoundRepository
+	repository RoundRepository
 }
 
 func NewRoundService(repo RoundRepository) *roundService {
-	return &roundService{repo: repo}
+	return &roundService{repository: repo}
 }
 
-func (s *roundService) Create(ctx context.Context, request *model.RoundRequest) (*model.RoundResponse, error) {
+func (service *roundService) Create(ctx context.Context, request *model.RoundRequest) (*model.RoundResponse, error) {
 	var newRound = request.ToEntity()
 
-	createdRound, err := s.repo.Create(ctx, newRound)
+	createdRound, err := service.repository.Create(ctx, newRound)
 	if err != nil {
 		return nil, err
 	}
@@ -31,15 +31,15 @@ func (s *roundService) Create(ctx context.Context, request *model.RoundRequest) 
 	return createdRound.ToResponse(), nil
 }
 
-func (s *roundService) Update(ctx context.Context, request *model.RoundRequest, id uint) (*model.RoundResponse, error) {
-	round, err := s.repo.GetById(ctx, id)
+func (service *roundService) Update(ctx context.Context, request *model.RoundRequest, id uint) (*model.RoundResponse, error) {
+	round, err := service.repository.GetById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
 	round.UpdateFromRequest(request)
 
-	updatedRound, err := s.repo.Update(ctx, round)
+	updatedRound, err := service.repository.Update(ctx, round)
 	if err != nil {
 		return nil, err
 	}
@@ -47,15 +47,15 @@ func (s *roundService) Update(ctx context.Context, request *model.RoundRequest, 
 	return updatedRound.ToResponse(), nil
 }
 
-func (s *roundService) Delete(ctx context.Context, id uint) error {
-	if err := s.repo.Delete(ctx, id); err != nil {
+func (service *roundService) Delete(ctx context.Context, id uint) error {
+	if err := service.repository.Delete(ctx, id); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *roundService) GetById(ctx context.Context, id uint) (*model.RoundResponse, error) {
-	round, err := s.repo.GetById(ctx, id)
+func (service *roundService) GetById(ctx context.Context, id uint) (*model.RoundResponse, error) {
+	round, err := service.repository.GetById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -63,8 +63,8 @@ func (s *roundService) GetById(ctx context.Context, id uint) (*model.RoundRespon
 	return round.ToResponse(), nil
 }
 
-func (s *roundService) GetBySeasonId(ctx context.Context, seasonId uint) ([]*model.RoundResponse, error) {
-	rounds, err := s.repo.GetBySeasonID(ctx, seasonId)
+func (service *roundService) GetBySeasonId(ctx context.Context, seasonId uint) ([]*model.RoundResponse, error) {
+	rounds, err := service.repository.GetBySeasonID(ctx, seasonId)
 	if err != nil {
 		return nil, err
 	}

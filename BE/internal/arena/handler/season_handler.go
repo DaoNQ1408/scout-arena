@@ -24,7 +24,7 @@ func NewSeasonHandler(service SeasonService) *seasonHandler {
 	return &seasonHandler{service: service}
 }
 
-func (s *seasonHandler) Create(c *gin.Context) {
+func (handler *seasonHandler) Create(c *gin.Context) {
 	var request model.SeasonRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -32,7 +32,7 @@ func (s *seasonHandler) Create(c *gin.Context) {
 		return
 	}
 
-	response, err := s.service.Create(c.Request.Context(), &request)
+	response, err := handler.service.Create(c.Request.Context(), &request)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -41,7 +41,7 @@ func (s *seasonHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, response)
 }
 
-func (s *seasonHandler) Update(c *gin.Context) {
+func (handler *seasonHandler) Update(c *gin.Context) {
 	id, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
 		return
@@ -54,7 +54,7 @@ func (s *seasonHandler) Update(c *gin.Context) {
 		return
 	}
 
-	response, err := s.service.Update(c.Request.Context(), &request, id)
+	response, err := handler.service.Update(c.Request.Context(), &request, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -63,13 +63,13 @@ func (s *seasonHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (s *seasonHandler) Delete(c *gin.Context) {
+func (handler *seasonHandler) Delete(c *gin.Context) {
 	id, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
 		return
 	}
 
-	err := s.service.Delete(c.Request.Context(), id)
+	err := handler.service.Delete(c.Request.Context(), id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -78,13 +78,13 @@ func (s *seasonHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Season deleted successfully"})
 }
 
-func (s *seasonHandler) GetById(c *gin.Context) {
+func (handler *seasonHandler) GetById(c *gin.Context) {
 	id, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
 		return
 	}
 
-	response, err := s.service.GetById(c.Request.Context(), id)
+	response, err := handler.service.GetById(c.Request.Context(), id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

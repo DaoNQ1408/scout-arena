@@ -25,7 +25,7 @@ func NewRoundHandler(service RoundService) *roundHandler {
 	return &roundHandler{service: service}
 }
 
-func (r *roundHandler) Create(c *gin.Context) {
+func (handler *roundHandler) Create(c *gin.Context) {
 	var request model.RoundRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -33,7 +33,7 @@ func (r *roundHandler) Create(c *gin.Context) {
 		return
 	}
 
-	response, err := r.service.Create(c.Request.Context(), &request)
+	response, err := handler.service.Create(c.Request.Context(), &request)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -42,7 +42,7 @@ func (r *roundHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, response)
 }
 
-func (r *roundHandler) Update(c *gin.Context) {
+func (handler *roundHandler) Update(c *gin.Context) {
 	id, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
 		return
@@ -54,7 +54,7 @@ func (r *roundHandler) Update(c *gin.Context) {
 		return
 	}
 
-	response, err := r.service.Update(c.Request.Context(), &request, id)
+	response, err := handler.service.Update(c.Request.Context(), &request, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -63,13 +63,13 @@ func (r *roundHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (r *roundHandler) Delete(c *gin.Context) {
+func (handler *roundHandler) Delete(c *gin.Context) {
 	id, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
 		return
 	}
 
-	if err := r.service.Delete(c.Request.Context(), id); err != nil {
+	if err := handler.service.Delete(c.Request.Context(), id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -77,13 +77,13 @@ func (r *roundHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Round deleted successfully"})
 }
 
-func (r *roundHandler) GetById(c *gin.Context) {
+func (handler *roundHandler) GetById(c *gin.Context) {
 	id, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
 		return
 	}
 
-	response, err := r.service.GetById(c.Request.Context(), id)
+	response, err := handler.service.GetById(c.Request.Context(), id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -92,13 +92,13 @@ func (r *roundHandler) GetById(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (r *roundHandler) GetBySeasonId(c *gin.Context) {
+func (handler *roundHandler) GetBySeasonId(c *gin.Context) {
 	seasonId, validParam := pkg.GetIDParam(c, "id")
 	if !validParam {
 		return
 	}
 
-	responses, err := r.service.GetBySeasonId(c.Request.Context(), seasonId)
+	responses, err := handler.service.GetBySeasonId(c.Request.Context(), seasonId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
