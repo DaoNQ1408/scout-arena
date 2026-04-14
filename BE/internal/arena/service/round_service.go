@@ -28,7 +28,7 @@ func (service *roundService) Create(ctx context.Context, request *model.RoundReq
 		return nil, err
 	}
 
-	return createdRound.ToResponse(), nil
+	return service.GetById(ctx, createdRound.ID)
 }
 
 func (service *roundService) Update(ctx context.Context, request *model.RoundRequest, id uint) (*model.RoundResponse, error) {
@@ -44,7 +44,7 @@ func (service *roundService) Update(ctx context.Context, request *model.RoundReq
 		return nil, err
 	}
 
-	return updatedRound.ToResponse(), nil
+	return service.GetById(ctx, updatedRound.ID)
 }
 
 func (service *roundService) Delete(ctx context.Context, id uint) error {

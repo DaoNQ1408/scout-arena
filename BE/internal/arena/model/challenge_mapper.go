@@ -11,6 +11,8 @@ func (challenge *Challenge) ToResponse() *ChallengeResponse {
 		RoundName:   challenge.Round.Name,
 		SeasonID:    challenge.Round.SeasonID,
 		SeasonName:  challenge.Round.Season.Name,
+		RankID:      challenge.RankID,
+		RankName:    challenge.Rank.Name,
 	}
 }
 
@@ -22,6 +24,7 @@ func (request *ChallengeRequest) ToEntity() *Challenge {
 		Point:       request.Point,
 		RoundID:     request.RoundID,
 		Status:      request.Status,
+		RankID:      request.RankID,
 	}
 }
 
@@ -32,4 +35,5 @@ func (challenge *Challenge) UpdateFromRequest(request *ChallengeRequest) {
 	challenge.ImageUrl = request.ImageUrl
 	challenge.RoundID = request.RoundID
 	challenge.Status = request.Status
+	challenge.RankID = request.RankID
 }

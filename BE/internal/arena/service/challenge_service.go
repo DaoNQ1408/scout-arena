@@ -29,7 +29,7 @@ func (service *challengeService) Create(ctx context.Context, request *model.Chal
 		return nil, err
 	}
 
-	return createdChallenge.ToResponse(), nil
+	return service.GetById(ctx, createdChallenge.ID)
 }
 
 func (service *challengeService) Update(ctx context.Context, request *model.ChallengeRequest, id uint) (*model.ChallengeResponse, error) {
@@ -45,7 +45,7 @@ func (service *challengeService) Update(ctx context.Context, request *model.Chal
 		return nil, err
 	}
 
-	return updatedChallenge.ToResponse(), nil
+	return service.GetById(ctx, updatedChallenge.ID)
 }
 
 func (service *challengeService) Delete(ctx context.Context, id uint) error {

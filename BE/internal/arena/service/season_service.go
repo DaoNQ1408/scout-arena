@@ -29,7 +29,7 @@ func (service *seasonService) Create(ctx context.Context, request *model.SeasonR
 		return nil, err
 	}
 
-	return createdSeason.ToResponse(), nil
+	return service.GetById(ctx, createdSeason.ID)
 }
 
 func (service *seasonService) Update(ctx context.Context, request *model.SeasonRequest, id uint) (*model.SeasonResponse, error) {
@@ -45,7 +45,7 @@ func (service *seasonService) Update(ctx context.Context, request *model.SeasonR
 		return nil, err
 	}
 
-	return updatedSeason.ToResponse(), err
+	return service.GetById(ctx, updatedSeason.ID)
 }
 
 func (service *seasonService) Delete(ctx context.Context, id uint) error {

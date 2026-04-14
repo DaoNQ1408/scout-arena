@@ -47,7 +47,11 @@ func (repository *challengeRepository) Delete(ctx context.Context, id uint) erro
 func (repository *challengeRepository) GetById(ctx context.Context, id uint) (*model.Challenge, error) {
 	var challenge model.Challenge
 
-	if err := repository.db.WithContext(ctx).First(&challenge, id).Error; err != nil {
+	err := repository.db.WithContext(ctx).
+		Preload("Rank").
+		Preload("Round.Season").
+		First(&challenge, id).Error
+	if err != nil {
 		return nil, err
 	}
 
