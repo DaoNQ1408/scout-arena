@@ -1,7 +1,7 @@
 import { Search, Home, Pencil, GitBranch, Tag, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/common/button";
+import { Input } from "@/components/common/input";
+import { Badge } from "@/components/common/badge";
 
 /* ───────── Color Palette Card ───────── */
 function ColorCard({

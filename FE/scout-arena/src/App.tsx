@@ -1,7 +1,8 @@
-import DesignSystemPage from './pages/DesignSystemPage'
+import DesignSystemPage from "./pages/DesignSystemPage";
+import Scout from "./pages/Scouts";
 
 function App() {
-  return <DesignSystemPage />
+  return <Scout />;
 }
 
-export default App
+export default App;
